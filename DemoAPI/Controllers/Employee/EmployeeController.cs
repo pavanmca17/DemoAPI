@@ -26,5 +26,38 @@ namespace DemoAPI.Controllers
 
             return Ok(employee);
         }
+
+        [HttpGet]
+        [Route("api/employees")]
+        public ActionResult<List<EmployeeData>> GetEmployees()
+        {
+            var employees = new List<EmployeeData>()
+            {
+                new EmployeeData()
+                {
+                    ID = 1,
+                    FirstName = "Pavan",
+                    LastName = "Kumar",
+                    DateOfBirth = DateTime.Now.AddYears(-30)
+                },
+                new EmployeeData()
+                {
+                    ID = 2,
+                    FirstName = "Satish",
+                    LastName = "Kumar",
+                    DateOfBirth = DateTime.Now.AddYears(-37)
+                },
+                new EmployeeData()
+                {
+                    ID = 3,
+                    FirstName = "Anik",
+                    LastName = "Joseph",
+                    DateOfBirth = DateTime.Now.AddYears(-3)
+                }
+            };
+            
+
+            return Ok(employees);
+        }
     }
 }
