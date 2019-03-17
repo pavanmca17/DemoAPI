@@ -28,7 +28,7 @@ namespace DemoAPI.Controllers
         }
 
         [HttpGet]
-        [Route("api/employees")]
+        [Route("api/getallemployees")]
         public ActionResult<List<EmployeeData>> GetEmployees()
         {
             var employees = new List<EmployeeData>()
