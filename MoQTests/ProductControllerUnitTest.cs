@@ -23,7 +23,7 @@ namespace MoQTests
             var actionResult = Assert.IsType<ActionResult<Product>>(result);
             var objectResult = Assert.IsType<OkObjectResult>(actionResult.Result);
             var product = Assert.IsType<Product>(objectResult.Value);
-            Assert.Equal("Green Tea", product.Name);
+            Assert.Equal("Green", product.Name);
         }
 
         [Fact]
