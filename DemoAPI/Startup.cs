@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace DemoAPI
 {
+    
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -30,7 +31,16 @@ namespace DemoAPI
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+            .ConfigureApiBehaviorOptions(options =>
+            {
+                options.InvalidModelStateResponseFactory = context =>
+                {
+                    var Issues = new CustomBadRequest(context);
+
+                    return new BadRequestObjectResult(Issues);
+                };
+            });
 
             // api versioning
             services.AddApiVersioning(o => o.ApiVersionReader = new HeaderApiVersionReader("api-version"));  
@@ -44,6 +54,13 @@ namespace DemoAPI
             services.AddTransient<INoteRepository, NoteRepository>();
             services.AddTransient<IProductRepository, ProductRepository>();
             services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+
+            services.AddCors(policy =>
+            {
+                policy.AddPolicy("CorsPolicy", options => options.AllowAnyHeader()
+                                                                 .AllowAnyMethod()
+                                                                 .AllowAnyOrigin());
+            });
 
 
         }
@@ -68,8 +85,10 @@ namespace DemoAPI
 
             app.ConfigureRequestResponseLoggingMiddleware();
             app.ConfigureCustomExceptionMiddleware();
-            //app.UseCors("CorsPolicy");
-            app.UseMvc();           
+            app.UseCors("CorsPolicy");
+            app.UseMvc();      
+            
+
 
 
         }

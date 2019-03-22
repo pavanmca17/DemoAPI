@@ -36,7 +36,9 @@ namespace DemoAPI
                 options.NotesDatabase = Configuration.GetSection("DBConnections:NoteDataBase").Value;
                 options.EmployeeDatabase = Configuration.GetSection("DBConnections:EmployeeDatabase").Value;
                 options.Env = Configuration.GetSection("Enviroment:Value").Value;
-                options.httpClientValues.TimeOut = Convert.ToInt32(Configuration.GetSection("HttpClient:TimeOut").Value);
+                options.httpClientValues = new HttpClientValues();
+                options.httpClientValues.TimeOut = Convert.ToInt32(Configuration.GetSection("HttpClient:Timeout").Value);
+                //options.httpClientValues.TimeOut = 1;
                 options.httpClientValues.BaseAddress = Configuration.GetSection("HttpClient:BaseAddress").Value;
             });
         }
@@ -47,12 +49,12 @@ namespace DemoAPI
 
             services.AddHttpClient(NamedHttpClients.namedHttpClient, client =>
             {
-                client.Timeout = TimeSpan.FromSeconds(Convert.ToInt32(Configuration.GetSection("HttpClient:TimeOut").Value));
+                client.Timeout = TimeSpan.FromSeconds(Convert.ToInt32(Configuration.GetSection("HttpClient:Timeout").Value));
             });
 
             services.AddHttpClient<IExternalService, ExternalService>(client =>
             {
-                client.Timeout = TimeSpan.FromSeconds(Convert.ToInt32(Configuration.GetSection("HttpClient:TimeOut").Value));
+                client.Timeout = TimeSpan.FromSeconds(Convert.ToInt32(Configuration.GetSection("HttpClient:Timeout").Value));
 
             });
         }

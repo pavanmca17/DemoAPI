@@ -3,8 +3,9 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using DemoAPI.Helpers;
 using DemoAPI.Interface;
+using DemoAPI.Models;
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.Extensions.Options;
 
 namespace DemoAPI.Controllers.httpClientDemo
 {
@@ -15,19 +16,22 @@ namespace DemoAPI.Controllers.httpClientDemo
     {
        
         private readonly IHttpClientFactory _httpClientFactory;
-        private readonly IExternalService _externalService;       
+        private readonly IExternalService _externalService;
+        private readonly IOptions<Settings> _settings;
 
-        public HttpClientProxy(IHttpClientFactory httpClientFactory, IExternalService externalService)
+        public HttpClientProxy(IHttpClientFactory httpClientFactory, IExternalService externalService, IOptions<Settings> settings)
         {
             _httpClientFactory = httpClientFactory;
-            _externalService = externalService;            
+            _externalService = externalService;
+            _settings = settings;
         }
 
         [Route("/normalhttpclient/{url}")]
         public async Task<ActionResult<String>> GetDatafromExternalApi(string url)
         {
             var httpclient = _httpClientFactory.CreateClient();
-            string content = await httpclient.GetStringAsync(url);
+            httpclient.BaseAddress = new Uri(_settings.Value.httpClientValues.BaseAddress);
+            string content = await httpclient.GetStringAsync("api/" + url);
             return Ok(content);
            
         }
@@ -36,8 +40,8 @@ namespace DemoAPI.Controllers.httpClientDemo
         public async Task<ActionResult<String>> GetDataFromWebWithNamedHttpClient(string url)
         {
             var httpclient = _httpClientFactory.CreateClient(NamedHttpClients.namedHttpClient);
-            httpclient.BaseAddress = new Uri(url);
-            string content = await httpclient.GetStringAsync("/");
+            httpclient.BaseAddress = new Uri(_settings.Value.httpClientValues.BaseAddress);
+            string content = await httpclient.GetStringAsync("api/" + url);
             return Ok(content);
 
         }
@@ -45,7 +49,7 @@ namespace DemoAPI.Controllers.httpClientDemo
         [Route("/injectedhttpclient/{url}")]
         public async Task<ActionResult<String>> GetDataFromWebwithInjectedClient(string url)
         {
-            string content = await _externalService.GetExternalServiceData();
+            string content = await _externalService.GetExternalServiceData("api/" + url);
             return Ok(content);
 
         }

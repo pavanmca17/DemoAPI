@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DemoAPI.Controllers
 {
-    [ApiController]
+    
     [ApiVersion("1.0")]
     public class ProductController : ControllerBase
     {

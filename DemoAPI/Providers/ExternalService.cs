@@ -20,9 +20,9 @@ namespace DemoAPI.Impl
             _httpClient.BaseAddress = new Uri(settings.Value.httpClientValues.BaseAddress); 
         }
 
-        public async Task<string> GetExternalServiceData()
+        public async Task<string> GetExternalServiceData(string url)
         {
-            return await _httpClient.GetStringAsync("/");
+            return await _httpClient.GetStringAsync(url);
         }
     }
 }

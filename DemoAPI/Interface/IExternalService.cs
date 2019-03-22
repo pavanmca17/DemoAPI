@@ -8,6 +8,6 @@ namespace DemoAPI.Interface
 {
     public interface IExternalService
     {
-        Task<String> GetExternalServiceData();
+        Task<String> GetExternalServiceData(string url);
     }
 }
