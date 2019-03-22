@@ -54,6 +54,13 @@ namespace DemoAPI.Controllers
                     FirstName = "Anik",
                     LastName = "Joseph",
                     DateOfBirth = DateTime.Now.AddYears(-3)
+                },
+                 new EmployeeData()
+                {
+                    ID = 3,
+                    FirstName = "Joel",
+                    LastName = "Ashvik",
+                    DateOfBirth = DateTime.Now.AddYears(-1)
                 }
             };
             
