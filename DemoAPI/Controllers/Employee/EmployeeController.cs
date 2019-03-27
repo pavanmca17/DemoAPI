@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DemoAPI.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace DemoAPI.Controllers
 {
@@ -13,6 +14,11 @@ namespace DemoAPI.Controllers
     [ApiController]
     public class EmployeeController : Controller
     {
+        public EmployeeController(ILogger<EmployeeController> logger)
+        {
+            logger.LogInformation("Created");
+        }
+
         [HttpGet]
         [Route("api/employees/employee/{id}")]
         public ActionResult<EmployeeData> GetByID(int id)

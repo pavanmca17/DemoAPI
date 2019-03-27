@@ -20,6 +20,12 @@ namespace DemoAPI.Models
     {
         public int TimeOut;
         public string BaseAddress;
+    }
+
+    public class RedisCacheSettings
+    {
+        public string  RedisCacheName;
+        public string Connectingstring;
 
     }
 }

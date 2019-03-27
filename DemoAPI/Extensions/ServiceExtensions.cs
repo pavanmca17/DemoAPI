@@ -1,4 +1,5 @@
-﻿using DemoAPI.Helpers;
+﻿using DemoAPI.Cache;
+using DemoAPI.Helpers;
 using DemoAPI.Impl;
 using DemoAPI.Interface;
 using DemoAPI.MiddleWare;
@@ -38,7 +39,6 @@ namespace DemoAPI
                 options.Env = Configuration.GetSection("Enviroment:Value").Value;
                 options.httpClientValues = new HttpClientValues();
                 options.httpClientValues.TimeOut = Convert.ToInt32(Configuration.GetSection("HttpClient:Timeout").Value);
-                //options.httpClientValues.TimeOut = 1;
                 options.httpClientValues.BaseAddress = Configuration.GetSection("HttpClient:BaseAddress").Value;
             });
         }
@@ -82,6 +82,11 @@ namespace DemoAPI
         public static void ConfigureRequestResponseLoggingMiddleware(this IApplicationBuilder app)
         {
             app.UseMiddleware<RequestResponseLoggingMiddleware>();
+        }
+
+        public static void ConfigureApplicationStartTimeHeaderMiddleWare(this IApplicationBuilder app)
+        {
+            app.UseMiddleware<ApplicationStartTimeHeaderMiddleWare>();
         }
 
 

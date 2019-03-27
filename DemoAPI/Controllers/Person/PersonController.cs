@@ -26,9 +26,9 @@ namespace DemoAPI.Controllers
 
         [HttpGet]
         [Route("api/Persons")]
-        public IActionResult Get()
+        public IEnumerable<Person> Get()
         {
-            return new ObjectResult(People);
+            return People;
         }
 
         [HttpGet()]

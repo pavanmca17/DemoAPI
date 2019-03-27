@@ -66,6 +66,7 @@ namespace DemoAPI.Impl
             var product = await _productContext.products.FindAsync(id);
             product.Name = Name;
             _productContext.products.Update(product);
+            await _productContext.SaveChangesAsync();
             return await Task.FromResult<Result>(new Result() { IsSuccess = true, Message = "Done" });
         }
 

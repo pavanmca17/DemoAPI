@@ -14,6 +14,8 @@ using DemoAPI.Models;
 using DemoAPI.MiddleWare;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Distributed;
+using System.Text;
 
 namespace DemoAPI
 {
@@ -40,7 +42,7 @@ namespace DemoAPI
 
                     return new BadRequestObjectResult(Issues);
                 };
-            });
+            });            
 
             // api versioning
             services.AddApiVersioning(o => o.ApiVersionReader = new HeaderApiVersionReader("api-version"));  
@@ -62,11 +64,17 @@ namespace DemoAPI
                                                                  .AllowAnyOrigin());
             });
 
+            services.AddDistributedRedisCache(options =>
+            {
+                options.InstanceName = Configuration.GetSection("RedisCacheDetails:HostName").Value;
+                options.Configuration =  Configuration.GetSection("RedisCacheDetails:ConnectionString").Value;
+            });
+
 
         }
 
        // This method gets called by the runtime.Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IDistributedCache distributedCache)
         {
             if (env.IsDevelopment())
             {
@@ -83,10 +91,18 @@ namespace DemoAPI
 
             }
 
+            string appStartTimeKey = "app-Last-Start-Time";
+            var serverStartTimeString = DateTime.Now.ToString();
+            byte[] val = Encoding.UTF8.GetBytes(serverStartTimeString);
+            distributedCache.SetAsync(appStartTimeKey, val);
+            app.ConfigureApplicationStartTimeHeaderMiddleWare();
             app.ConfigureRequestResponseLoggingMiddleware();
             app.ConfigureCustomExceptionMiddleware();
+
             app.UseCors("CorsPolicy");
-            app.UseMvc();      
+            app.UseMvc();   
+            
+
             
 
 

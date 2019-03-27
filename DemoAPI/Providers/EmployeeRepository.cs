@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using MongoDB.Driver;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Logging;
 
 namespace DemoAPI
 {
@@ -14,8 +15,9 @@ namespace DemoAPI
     {
         private readonly IMongoCollection<Employee> _employees;
 
-        public  EmployeeRepository(IConfiguration config, IOptions<Settings> settings)
+        public  EmployeeRepository(IConfiguration config, IOptions<Settings> settings,ILogger<EmployeeRepository> logger)
         {
+
             var client = new MongoClient(settings.Value.MongoDBConnectionString);
             var database = client.GetDatabase(settings.Value.EmployeeDatabase);
             _employees = database.GetCollection<Employee>("Employees");
