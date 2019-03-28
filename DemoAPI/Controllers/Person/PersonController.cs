@@ -10,6 +10,7 @@ namespace DemoAPI.Controllers
 
 
     [ApiVersion("1.0")]
+    [ApiController]
     public class PersonController : Controller
     {
         public PersonController()
