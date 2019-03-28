@@ -64,11 +64,11 @@ namespace DemoAPI
                                                                  .AllowAnyOrigin());
             });
 
-            services.AddDistributedRedisCache(options =>
-            {
-                options.InstanceName = Configuration.GetSection("RedisCacheDetails:HostName").Value;
-                options.Configuration =  Configuration.GetSection("RedisCacheDetails:ConnectionString").Value;
-            });
+            //services.AddDistributedRedisCache(options =>
+            //{
+            //    options.InstanceName = Configuration.GetSection("RedisCacheDetails:HostName").Value;
+            //    options.Configuration =  Configuration.GetSection("RedisCacheDetails:ConnectionString").Value;
+            //});
 
 
         }
@@ -91,11 +91,11 @@ namespace DemoAPI
 
             }
 
-            string appStartTimeKey = "app-Last-Start-Time";
-            var serverStartTimeString = DateTime.Now.ToString();
-            byte[] val = Encoding.UTF8.GetBytes(serverStartTimeString);
-            distributedCache.SetAsync(appStartTimeKey, val);
-            app.ConfigureApplicationStartTimeHeaderMiddleWare();
+            //string appStartTimeKey = "app-Last-Start-Time";
+            //var serverStartTimeString = DateTime.Now.ToString();
+            //byte[] val = Encoding.UTF8.GetBytes(serverStartTimeString);
+            //distributedCache.SetAsync(appStartTimeKey, val);
+            //app.ConfigureApplicationStartTimeHeaderMiddleWare();
             app.ConfigureRequestResponseLoggingMiddleware();
             app.ConfigureCustomExceptionMiddleware();
 
