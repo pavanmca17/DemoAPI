@@ -96,6 +96,7 @@ namespace DemoAPI
             //byte[] val = Encoding.UTF8.GetBytes(serverStartTimeString);
             //distributedCache.SetAsync(appStartTimeKey, val);
             //app.ConfigureApplicationStartTimeHeaderMiddleWare();
+            app.ConfigureCorealtionIDMiddleWare();
             app.ConfigureRequestResponseLoggingMiddleware();
             app.ConfigureCustomExceptionMiddleware();
 
