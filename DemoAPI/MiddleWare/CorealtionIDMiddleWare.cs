@@ -24,7 +24,7 @@ namespace DemoAPI.MiddleWare
            await _next(httpContext);
         }
 
-        private static Task LogConfigurationID(HttpContext context)
+        private Task LogConfigurationID(HttpContext context)
         {
              if (context.Request.Headers.TryGetValue("CorealtionID", out StringValues correlationId))
              {    context.TraceIdentifier = correlationId;
