@@ -89,11 +89,10 @@ namespace DemoAPI
             app.UseMiddleware<ApplicationStartTimeHeaderMiddleWare>();
         }
         
-        public static void ConfigureApplicationStartTimeHeaderMiddleWare(this IApplicationBuilder app)
+        public static void ConfigureCorealtionIDMiddleWare(this IApplicationBuilder app)
         {
             app.UseMiddleware<CorealtionIDMiddleWare>();
-        }  
-        
+        }        
 
 
     }
