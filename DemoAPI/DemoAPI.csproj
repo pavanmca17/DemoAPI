@@ -6,8 +6,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\Employee\CancellationTokenTestController.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="TestData\" />
     <Folder Include="wwwroot\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Controllers\Employee\CancellationTokenTestController.cs" />
   </ItemGroup>
 
   <ItemGroup>

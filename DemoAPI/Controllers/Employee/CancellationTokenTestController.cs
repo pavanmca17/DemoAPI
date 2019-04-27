@@ -13,8 +13,7 @@ namespace DemoAPI.Controllers
     [ApiController]
     [ApiVersion("2.0")]
     public class CancellationTokenTestController : ControllerBase
-    {
-         
+    {         
         [HttpGet("/{waittime}")]
         public async Task<string> Get(CancellationToken cancellationToken,int waittime)
         {
