@@ -27,13 +27,14 @@ namespace DemoAPI.MiddleWare
         private Task LogConfigurationID(HttpContext context)
         {
              if (context.Request.Headers.TryGetValue("CorealtionID", out StringValues correlationId))
-             {    context.TraceIdentifier = correlationId;
+             {  context.TraceIdentifier = correlationId;
              }
+             
              
             // apply the correlation ID to the response header for client side tracking
             context.Response.OnStarting(() =>
             {
-                   context.Response.Headers.Add("corelationheader", new[] { context.TraceIdentifier });
+                   context.Response.Headers.Add("corelationheader", Guid.NewGuid().ToString());
                    return Task.CompletedTask;
             });
 

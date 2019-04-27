@@ -9,7 +9,10 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Polly;
+using Polly.CircuitBreaker;
 using System;
+using System.Net.Http;
 
 
 namespace DemoAPI
@@ -56,7 +59,49 @@ namespace DemoAPI
             {
                 client.Timeout = TimeSpan.FromSeconds(Convert.ToInt32(Configuration.GetSection("HttpClient:Timeout").Value));
 
+            });           
+  
+        }
+
+        public static void AddPollyServices(this IServiceCollection services)
+        {
+            IAsyncPolicy<HttpResponseMessage> retryPolicy =
+            Policy.HandleResult<HttpResponseMessage>(r => !r.IsSuccessStatusCode)
+           .RetryAsync(3);
+
+            CircuitBreakerPolicy<HttpResponseMessage> circutBreakerPolicy =
+            Policy.HandleResult<HttpResponseMessage>(r => !r.IsSuccessStatusCode)
+            .CircuitBreaker(
+                  handledEventsAllowedBeforeBreaking: 4,
+                  durationOfBreak: TimeSpan.FromMinutes(1)
+                );
+
+  //          circutBreakerPolicy.e
+
+  //          CircuitBreakerPolicy breaker = Policy
+  //.Handle<HttpRequestException>()
+  //.CircuitBreaker(
+  //  exceptionsAllowedBeforeBreaking: 2,
+  //  durationOfBreak: TimeSpan.FromMinutes(1)
+  //);
+
+
+            //var breaker = Policy.Handle<HttpRequestException>()
+            //.CircuitBreaker(
+            //  exceptionsAllowedBeforeBreaking: 2,
+            //  durationOfBreak: TimeSpan.FromMinutes(1)
+            //);
+
+
+            services.AddSingleton<IAsyncPolicy<HttpResponseMessage>>(retryPolicy);            
+
+            services.AddHttpClient(NamedHttpClients.pollyHttpClient, client => {
+
+                client.BaseAddress = new Uri("http://localhost:50282");
+                client.DefaultRequestHeaders.Add("api-version", "1.0");
             });
+
+           
         }
 
         public static void AddDBContext<T>(this IServiceCollection services, IConfiguration Configuration) where T : DbContext

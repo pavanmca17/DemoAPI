@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Distributed;
 using System.Text;
 
+
 namespace DemoAPI
 {
     
@@ -49,6 +50,8 @@ namespace DemoAPI
 
             services.AddHttpClient(Configuration);
 
+            services.AddPollyServices();
+
             services.ConfigureValues(Configuration);
 
             services.AddDBContext<ProductContext>(Configuration);
@@ -63,6 +66,8 @@ namespace DemoAPI
                                                                  .AllowAnyMethod()
                                                                  .AllowAnyOrigin());
             });
+
+            
 
             //services.AddDistributedRedisCache(options =>
             //{
@@ -96,9 +101,9 @@ namespace DemoAPI
             //byte[] val = Encoding.UTF8.GetBytes(serverStartTimeString);
             //distributedCache.SetAsync(appStartTimeKey, val);
             //app.ConfigureApplicationStartTimeHeaderMiddleWare();
-            app.ConfigureCorealtionIDMiddleWare();
-            app.ConfigureRequestResponseLoggingMiddleware();
-            app.ConfigureCustomExceptionMiddleware();
+            //app.ConfigureCorealtionIDMiddleWare();
+            //app.ConfigureRequestResponseLoggingMiddleware();
+            //app.ConfigureCustomExceptionMiddleware();
 
             app.UseCors("CorsPolicy");
             app.UseMvc();   
