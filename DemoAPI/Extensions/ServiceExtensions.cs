@@ -5,6 +5,7 @@ using DemoAPI.Interface;
 using DemoAPI.MiddleWare;
 using DemoAPI.Models;
 using EF;
+using HttpClientDelegatingHandler;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -74,23 +75,7 @@ namespace DemoAPI
             .CircuitBreaker(
                   handledEventsAllowedBeforeBreaking: 4,
                   durationOfBreak: TimeSpan.FromMinutes(1)
-                );
-
-  //          circutBreakerPolicy.e
-
-  //          CircuitBreakerPolicy breaker = Policy
-  //.Handle<HttpRequestException>()
-  //.CircuitBreaker(
-  //  exceptionsAllowedBeforeBreaking: 2,
-  //  durationOfBreak: TimeSpan.FromMinutes(1)
-  //);
-
-
-            //var breaker = Policy.Handle<HttpRequestException>()
-            //.CircuitBreaker(
-            //  exceptionsAllowedBeforeBreaking: 2,
-            //  durationOfBreak: TimeSpan.FromMinutes(1)
-            //);
+                );     
 
 
             services.AddSingleton<IAsyncPolicy<HttpResponseMessage>>(retryPolicy);            
@@ -99,9 +84,10 @@ namespace DemoAPI
 
                 client.BaseAddress = new Uri("http://localhost:50282");
                 client.DefaultRequestHeaders.Add("api-version", "1.0");
-            });
+            })
+            .AddHttpMessageHandler<TimingHandler>() // This handler is on the outside and executes first on the way out and last on the way in.
+            .AddHttpMessageHandler<ValidateHeaderHandler>(); // This handler is on the inside, closest to the request.
 
-           
         }
 
         public static void AddDBContext<T>(this IServiceCollection services, IConfiguration Configuration) where T : DbContext

@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Controllers\Employee\CancellationTokenTestController.cs" />
+    <None Include="Controllers\others\CancellationTokenTestController.cs" />
   </ItemGroup>
 
   <ItemGroup>

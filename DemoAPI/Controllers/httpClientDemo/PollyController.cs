@@ -16,14 +16,13 @@ namespace DemoAPI.Controllers.httpClientDemo
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IAsyncPolicy<HttpResponseMessage> _retryPolicy;
-        private readonly CircuitBreakerPolicy<HttpResponseMessage> _circuitBreakerPolicy;
 
 
-        public PollyController(IHttpClientFactory httpClientFactory, IAsyncPolicy<HttpResponseMessage> retryPolicy, CircuitBreakerPolicy<HttpResponseMessage> circuitBreakerPolicy)
+        public PollyController(IHttpClientFactory httpClientFactory, IAsyncPolicy<HttpResponseMessage> retryPolicy)
         {
             _httpClientFactory = httpClientFactory;
             _retryPolicy = retryPolicy;
-            _circuitBreakerPolicy = circuitBreakerPolicy;
+          
         }
 
         [HttpGet()]

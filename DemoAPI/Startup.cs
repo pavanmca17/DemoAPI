@@ -6,26 +6,21 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Mvc.Versioning;
-using System;
 using DemoAPI.Helpers;
 using EF;
-using Microsoft.EntityFrameworkCore;
-using DemoAPI.Models;
-using DemoAPI.MiddleWare;
-using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Distributed;
-using System.Text;
-
+using Microsoft.Extensions.Logging;
+using System;
+using HttpClientDelegatingHandler;
 
 namespace DemoAPI
 {
-    
     public class Startup
     {
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+          
         }
 
         public IConfiguration Configuration { get; }
@@ -33,18 +28,21 @@ namespace DemoAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-            .ConfigureApiBehaviorOptions(options =>
+            services.AddMvc(options =>
             {
-                options.InvalidModelStateResponseFactory = context =>
-                {
-                    var Issues = new CustomBadRequest(context);
+                options.Filters.Add<OperationCancelledExceptionFilter>();
+            })
+             .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+             .ConfigureApiBehaviorOptions(options =>             {
 
-                    return new BadRequestObjectResult(Issues);
-                };
-            });            
 
+                 options.InvalidModelStateResponseFactory = context =>
+                 {
+                     var Issues = new CustomBadRequest(context);
+
+                     return new BadRequestObjectResult(Issues);
+                 };
+             });  
             // api versioning
             services.AddApiVersioning(o => o.ApiVersionReader = new HeaderApiVersionReader("api-version"));  
 
@@ -55,6 +53,9 @@ namespace DemoAPI
             services.ConfigureValues(Configuration);
 
             services.AddDBContext<ProductContext>(Configuration);
+
+            services.AddTransient<TimingHandler>();
+            services.AddTransient<ValidateHeaderHandler>();
 
             services.AddTransient<INoteRepository, NoteRepository>();
             services.AddTransient<IProductRepository, ProductRepository>();
@@ -67,14 +68,7 @@ namespace DemoAPI
                                                                  .AllowAnyOrigin());
             });
 
-            
-
-            //services.AddDistributedRedisCache(options =>
-            //{
-            //    options.InstanceName = Configuration.GetSection("RedisCacheDetails:HostName").Value;
-            //    options.Configuration =  Configuration.GetSection("RedisCacheDetails:ConnectionString").Value;
-            //});
-
+            services.AddLogging(configure => configure.AddConsole());
 
         }
 
@@ -104,13 +98,10 @@ namespace DemoAPI
             //app.ConfigureCorealtionIDMiddleWare();
             //app.ConfigureRequestResponseLoggingMiddleware();
             //app.ConfigureCustomExceptionMiddleware();
-
+         
             app.UseCors("CorsPolicy");
-            app.UseMvc();   
-            
-
-            
-
+            app.UseMvc();
+           
 
 
         }

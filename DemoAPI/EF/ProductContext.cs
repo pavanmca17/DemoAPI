@@ -26,7 +26,6 @@ namespace EF
 
         }
 
-
         public DbSet<Product> products { get; set; }
 
     }
