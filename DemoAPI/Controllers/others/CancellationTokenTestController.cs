@@ -15,7 +15,7 @@ namespace DemoAPI.Controllers
     [ApiVersion("2.0")]
     public class CancellationTokenTestController : ControllerBase
     {         
-        [HttpGet("/{waittime}")]
+        [HttpGet("api/cancellation/{waittime}")]
         public async Task<string> Get(CancellationToken cancellationToken,int waittime)
         {
             await Task.Delay(waittime, cancellationToken);          

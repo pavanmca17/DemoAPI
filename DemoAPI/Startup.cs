@@ -12,6 +12,9 @@ using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using System;
 using HttpClientDelegatingHandler;
+using DemoAPI.Providers;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using DemoAPI.Logging;
 
 namespace DemoAPI
 {
@@ -31,11 +34,14 @@ namespace DemoAPI
             services.AddMvc(options =>
             {
                 options.Filters.Add<OperationCancelledExceptionFilter>();
+                options.Filters.Add<LoggingActionFilter>();
+                options.RespectBrowserAcceptHeader = true; // false by default
+                options.OutputFormatters.Add(new XmlSerializerOutputFormatter());
+
             })
              .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-             .ConfigureApiBehaviorOptions(options =>             {
-
-
+             .ConfigureApiBehaviorOptions(options =>    
+             {
                  options.InvalidModelStateResponseFactory = context =>
                  {
                      var Issues = new CustomBadRequest(context);
@@ -60,6 +66,7 @@ namespace DemoAPI
             services.AddTransient<INoteRepository, NoteRepository>();
             services.AddTransient<IProductRepository, ProductRepository>();
             services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            services.AddScoped<ICustomterRepository, CustomerRepository>();
 
             services.AddCors(policy =>
             {
@@ -69,6 +76,7 @@ namespace DemoAPI
             });
 
             services.AddLogging(configure => configure.AddConsole());
+            services.AddSingleton<LoggingActionFilter>();
 
         }
 
@@ -95,7 +103,7 @@ namespace DemoAPI
             //byte[] val = Encoding.UTF8.GetBytes(serverStartTimeString);
             //distributedCache.SetAsync(appStartTimeKey, val);
             //app.ConfigureApplicationStartTimeHeaderMiddleWare();
-            //app.ConfigureCorealtionIDMiddleWare();
+            app.ConfigureCorealtionIDMiddleWare();
             //app.ConfigureRequestResponseLoggingMiddleware();
             //app.ConfigureCustomExceptionMiddleware();
          

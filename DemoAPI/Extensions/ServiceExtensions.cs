@@ -68,14 +68,7 @@ namespace DemoAPI
         {
             IAsyncPolicy<HttpResponseMessage> retryPolicy =
             Policy.HandleResult<HttpResponseMessage>(r => !r.IsSuccessStatusCode)
-           .RetryAsync(3);
-
-            CircuitBreakerPolicy<HttpResponseMessage> circutBreakerPolicy =
-            Policy.HandleResult<HttpResponseMessage>(r => !r.IsSuccessStatusCode)
-            .CircuitBreaker(
-                  handledEventsAllowedBeforeBreaking: 4,
-                  durationOfBreak: TimeSpan.FromMinutes(1)
-                );     
+           .RetryAsync(3);              
 
 
             services.AddSingleton<IAsyncPolicy<HttpResponseMessage>>(retryPolicy);            
