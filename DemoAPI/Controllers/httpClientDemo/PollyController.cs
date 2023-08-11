@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Threading.Tasks;
 using DemoAPI.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Polly;
-using Polly.CircuitBreaker;
+
 
 namespace DemoAPI.Controllers.httpClientDemo
 {
@@ -16,13 +13,10 @@ namespace DemoAPI.Controllers.httpClientDemo
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IAsyncPolicy<HttpResponseMessage> _retryPolicy;
-
-
         public PollyController(IHttpClientFactory httpClientFactory, IAsyncPolicy<HttpResponseMessage> retryPolicy)
         {
             _httpClientFactory = httpClientFactory;
-            _retryPolicy = retryPolicy;
-          
+            _retryPolicy = retryPolicy;          
         }
 
         [HttpGet()]
@@ -36,7 +30,7 @@ namespace DemoAPI.Controllers.httpClientDemo
 
             if (httpResponseMessage.IsSuccessStatusCode)
             {
-                int temperature = await httpResponseMessage.Content.ReadAsAsync<int>();
+                string temperature = await httpResponseMessage.Content.ReadAsStringAsync();
                 return Ok(temperature);
             }
 

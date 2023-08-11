@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Internal;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -57,7 +54,7 @@ namespace DemoAPI.MiddleWare
             var body = request.Body;
 
             //This line allows us to set the reader for the request back at the beginning of its stream.
-            request.EnableRewind();
+           // request.EnableRewind();
 
             int reqContentlength = Convert.ToInt32(request.ContentLength);
 

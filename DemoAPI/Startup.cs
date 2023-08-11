@@ -38,8 +38,7 @@ namespace DemoAPI
                 options.RespectBrowserAcceptHeader = true; // false by default
                 options.OutputFormatters.Add(new XmlSerializerOutputFormatter());
 
-            })
-             .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+            })            
              .ConfigureApiBehaviorOptions(options =>    
              {
                  options.InvalidModelStateResponseFactory = context =>

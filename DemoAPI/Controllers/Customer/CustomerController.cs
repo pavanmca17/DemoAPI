@@ -26,11 +26,7 @@ namespace DemoAPI.Controllers
         [Route("api/customer/{hasorders}")]
         public async Task<ActionResult<List<Employee>>> GetCustomer(bool hasOrders)
         {
-            Customer customer = await _customerRepository.GetCustomerwithOrders(hasOrders);
-            //if(hasOrders)
-            //{
-            //    var orders = customer.orders;
-            //}            
+            Customer customer = await _customerRepository.GetCustomerwithOrders(hasOrders);                    
             return Ok(customer);
         }
         

@@ -8,16 +8,16 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace MoQTests
+namespace MoQTests.UnitTests
 {
-    
+
     public class ProductControllerUnitTest
     {
         [Fact]
         public async void Test_Get_Product()
         {
             var mock = new Mock<IProductRepository>();
-            mock.Setup(p => p.GetProductByID(It.IsAny<int>())).Returns(Task.FromResult<Product>(new Product() { ID=1, Name="Green Tea" }));
+            mock.Setup(p => p.GetProductByID(It.IsAny<int>())).Returns(Task.FromResult(new Product() { ID = 1, Name = "Green Tea" }));
             ProductController controller = new ProductController(mock.Object);
             var result = await controller.GetProduct(1);
             var actionResult = Assert.IsType<ActionResult<Product>>(result);
@@ -30,7 +30,7 @@ namespace MoQTests
         public async void Test_Get_Products()
         {
             var mock = new Mock<IProductRepository>();
-            mock.Setup(p => p.GetProducts()).Returns(Task.FromResult<List<Product>>(new List<Product>() { new Product() { ID = 1, Name = "Green Tea" } }));
+            mock.Setup(p => p.GetProducts()).Returns(Task.FromResult(new List<Product>() { new Product() { ID = 1, Name = "Green Tea" } }));
             ProductController controller = new ProductController(mock.Object);
             var result = await controller.GetAllProducts();
             var actionResult = Assert.IsType<ActionResult<List<Product>>>(result);
@@ -43,7 +43,7 @@ namespace MoQTests
         public async void Test_Get_CreateProduct()
         {
             var mock = new Mock<IProductRepository>();
-            mock.Setup(p => p.CreateProduct(It.IsAny<Product>())).Returns(Task.FromResult<Result>(new Result() { IsSuccess = true, Message="Done" }));
+            mock.Setup(p => p.CreateProduct(It.IsAny<Product>())).Returns(Task.FromResult(new Result() { IsSuccess = true, Message = "Done" }));
             ProductController controller = new ProductController(mock.Object);
             var result = await controller.CreateProduct(new Product());
             var actionResult = Assert.IsType<ActionResult<Result>>(result);
@@ -56,7 +56,7 @@ namespace MoQTests
         public async void Test_Get_DeleteProduct()
         {
             var mock = new Mock<IProductRepository>();
-            mock.Setup(p => p.DeleteProduct(It.IsAny<int>())).Returns(Task.FromResult<Result>(new Result() { IsSuccess = true, Message = "Done" }));
+            mock.Setup(p => p.DeleteProduct(It.IsAny<int>())).Returns(Task.FromResult(new Result() { IsSuccess = true, Message = "Done" }));
             ProductController controller = new ProductController(mock.Object);
             var result = await controller.DeleteProduct(1);
             var actionResult = Assert.IsType<ActionResult<Result>>(result);
